@@ -34,7 +34,7 @@ public class CompanyDomainService
     public Company createCompany(String name, boolean active, CompanyChecker companyChecker)
     {
         // 检查名称唯一性
-        if (companyChecker != null && companyChecker.isNameUnique(name)) {
+        if (companyChecker != null && !companyChecker.isNameUnique(name)) {
             throw new IllegalArgumentException("公司名称必须唯一");
         }
 

@@ -104,7 +104,7 @@ public class Company
         }
 
         // 检查名称唯一性
-        if (companyChecker != null && companyChecker.isNameUnique(name)) {
+        if (companyChecker != null && !companyChecker.isNameUnique(name)) {
             throw new IllegalArgumentException("公司名称必须唯一");
         }
 

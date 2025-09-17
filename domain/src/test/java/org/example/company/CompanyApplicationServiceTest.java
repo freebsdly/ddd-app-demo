@@ -2,44 +2,48 @@ package org.example.company;
 
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+
 import java.util.Optional;
 import java.util.UUID;
-import static org.junit.jupiter.api.Assertions.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.Mockito.*;
 
-class CompanyApplicationServiceTest {
+class CompanyApplicationServiceTest
+{
 
     private CompanyApplicationService companyApplicationService;
     private CompanyDomainService companyDomainService;
     private CompanyChecker companyChecker;
     private DepartmentChecker departmentChecker;
     private DomainEventPublisher domainEventPublisher;
-    private CompanyRepository companyRepository;
 
     @BeforeEach
-    void setUp() {
+    void setUp()
+    {
         companyDomainService = mock(CompanyDomainService.class);
         companyChecker = mock(CompanyChecker.class);
         departmentChecker = mock(DepartmentChecker.class);
         domainEventPublisher = mock(DomainEventPublisher.class);
-        companyRepository = mock(CompanyRepository.class);
-        
+
         companyApplicationService = new CompanyApplicationService(
-            companyDomainService, 
-            companyChecker, 
-            departmentChecker, 
-            domainEventPublisher
+                companyDomainService,
+                companyChecker,
+                departmentChecker,
+                domainEventPublisher
         );
     }
 
     @Test
-    void shouldCreateCompany() {
+    void shouldCreateCompany()
+    {
         // given
         String name = "Test Company";
         boolean active = true;
         Company company = Company.create(name, active);
         when(companyDomainService.createCompany(name, active, companyChecker))
-            .thenReturn(company);
+                .thenReturn(company);
 
         // when
         Company result = companyApplicationService.createCompany(name, active);
@@ -53,18 +57,19 @@ class CompanyApplicationServiceTest {
     }
 
     @Test
-    void shouldUpdateCompanyInfo() {
+    void shouldUpdateCompanyInfo()
+    {
         // given
         UUID companyId = UUID.randomUUID();
         Address address = new Address("123 Main St", "Beijing", "Beijing", "100000", "China");
         String contactPhone = "1234567890";
         String email = "test@example.com";
         String businessScope = "IT Services";
-        
+
         // 使用带ID参数的create方法构造Company实例
-        Company company = Company.create(companyId, "Test Company", null, null, null, null, true, 
-            java.time.LocalDateTime.now(), java.time.LocalDateTime.now());
-        
+        Company company = Company.create(companyId, "Test Company", null, null, null, null, true,
+                java.time.LocalDateTime.now(), java.time.LocalDateTime.now());
+
         when(companyDomainService.findById(companyId)).thenReturn(Optional.of(company));
 
         // when
@@ -77,15 +82,16 @@ class CompanyApplicationServiceTest {
     }
 
     @Test
-    void shouldUpdateCompanyName() {
+    void shouldUpdateCompanyName()
+    {
         // given
         UUID companyId = UUID.randomUUID();
         String newName = "Updated Company Name";
-        
+
         // 使用带ID参数的create方法构造Company实例
-        Company company = Company.create(companyId, "Test Company", null, null, null, null, true, 
-            java.time.LocalDateTime.now(), java.time.LocalDateTime.now());
-        
+        Company company = Company.create(companyId, "Test Company", null, null, null, null, true,
+                java.time.LocalDateTime.now(), java.time.LocalDateTime.now());
+
         when(companyDomainService.findById(companyId)).thenReturn(Optional.of(company));
 
         // when
@@ -98,13 +104,14 @@ class CompanyApplicationServiceTest {
     }
 
     @Test
-    void shouldActivateCompany() {
+    void shouldActivateCompany()
+    {
         // given
         UUID companyId = UUID.randomUUID();
         // 使用带ID参数的create方法构造Company实例，初始状态为非激活
-        Company company = Company.create(companyId, "Test Company", null, null, null, null, false, 
-            java.time.LocalDateTime.now(), java.time.LocalDateTime.now());
-        
+        Company company = Company.create(companyId, "Test Company", null, null, null, null, false,
+                java.time.LocalDateTime.now(), java.time.LocalDateTime.now());
+
         when(companyDomainService.findById(companyId)).thenReturn(Optional.of(company));
 
         // when
@@ -117,13 +124,14 @@ class CompanyApplicationServiceTest {
     }
 
     @Test
-    void shouldDeactivateCompany() {
+    void shouldDeactivateCompany()
+    {
         // given
         UUID companyId = UUID.randomUUID();
         // 使用带ID参数的create方法构造Company实例，初始状态为激活
-        Company company = Company.create(companyId, "Test Company", null, null, null, null, true, 
-            java.time.LocalDateTime.now(), java.time.LocalDateTime.now());
-        
+        Company company = Company.create(companyId, "Test Company", null, null, null, null, true,
+                java.time.LocalDateTime.now(), java.time.LocalDateTime.now());
+
         when(companyDomainService.findById(companyId)).thenReturn(Optional.of(company));
         when(departmentChecker.hasActiveDepartments(companyId)).thenReturn(false);
 
