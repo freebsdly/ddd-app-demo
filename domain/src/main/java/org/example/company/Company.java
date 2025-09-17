@@ -41,6 +41,22 @@ public class Company
         this.updatedAt = LocalDateTime.now();
     }
 
+    // 用于仓储加载的私有构造函数，不触发事件
+    private Company(UUID id, String name, Address address, String contactPhone,
+            String email, String businessScope, boolean active,
+            LocalDateTime createdAt, LocalDateTime updatedAt)
+    {
+        this.id = id;
+        this.name = name;
+        this.address = address;
+        this.contactPhone = contactPhone;
+        this.email = email;
+        this.businessScope = businessScope;
+        this.active = active;
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
+
     // 工厂方法创建公司实例
     public static Company create(String name, boolean active)
     {
@@ -52,7 +68,20 @@ public class Company
         // 生成唯一ID
         UUID id = UUID.randomUUID();
 
-        return new Company(id, name, active);
+        Company company = new Company(id, name, active);
+        // 添加领域事件
+        company.addDomainEvent(new CompanyCreatedEvent(id, name, active));
+        return company;
+    }
+
+    // 仓储加载时使用的工厂方法
+    public static Company create(UUID id, String name, Address address,
+            String contactPhone, String email,
+            String businessScope, boolean active,
+            LocalDateTime createdAt, LocalDateTime updatedAt)
+    {
+        return new Company(id, name, address, contactPhone, email, businessScope,
+                active, createdAt, updatedAt);
     }
 
     // 领域行为方法
@@ -64,7 +93,7 @@ public class Company
         this.businessScope = businessScope;
         this.updatedAt = LocalDateTime.now();
         // 添加领域事件
-        this.domainEvents.add(new CompanyInfoUpdatedEvent(this.id, this.name));
+        this.addDomainEvent(new CompanyInfoUpdatedEvent(this.id, this.name));
     }
 
     // 修改 updateName 方法，使用 CompanyChecker 替代 Predicate
@@ -83,7 +112,7 @@ public class Company
         this.name = name;
         this.updatedAt = LocalDateTime.now();
         // 添加领域事件
-        this.domainEvents.add(new CompanyNameUpdatedEvent(this.id, oldName, name));
+        this.addDomainEvent(new CompanyNameUpdatedEvent(this.id, oldName, name));
     }
 
     public void activate()
@@ -91,7 +120,7 @@ public class Company
         this.active = true;
         this.updatedAt = LocalDateTime.now();
         // 添加领域事件
-        this.domainEvents.add(new CompanyActivatedEvent(this.id, this.name));
+        this.addDomainEvent(new CompanyActivatedEvent(this.id, this.name));
     }
 
     // 修改 deactivate 方法以添加业务规则检查
@@ -105,7 +134,7 @@ public class Company
         this.active = false;
         this.updatedAt = LocalDateTime.now();
         // 添加领域事件
-        this.domainEvents.add(new CompanyDeactivatedEvent(this.id, this.name));
+        this.addDomainEvent(new CompanyDeactivatedEvent(this.id, this.name));
     }
 
     // 获取领域事件并清空
@@ -130,5 +159,11 @@ public class Company
     public int hashCode()
     {
         return Objects.hash(id);
+    }
+
+    // 添加领域事件的辅助方法
+    private void addDomainEvent(DomainEvent event)
+    {
+        this.domainEvents.add(event);
     }
 }
