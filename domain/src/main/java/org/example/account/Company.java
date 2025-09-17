@@ -1,2 +1,5 @@
-package org.example.account;public class Company {
+package org.example.account;
+
+public class Company
+{
 }

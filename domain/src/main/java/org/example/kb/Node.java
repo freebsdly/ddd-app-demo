@@ -1,2 +1,5 @@
-package org.example.kb;public class Node {
+package org.example.kb;
+
+public class Node
+{
 }
