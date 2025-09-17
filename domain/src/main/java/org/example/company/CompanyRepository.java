@@ -10,10 +10,10 @@ public interface CompanyRepository
     void save(Company company);
 
     Optional<Company> findById(String id);
-    
+
     Optional<Company> findByName(String name);
 
     void delete(Company company);
-    
+
     boolean existsByName(String name);
 }

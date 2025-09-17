@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
-import java.util.function.Predicate;
 
 /**
  * 公司实体，同时也是聚合根
@@ -29,9 +28,6 @@ public class Company
     private final LocalDateTime createdAt;
     private LocalDateTime updatedAt;
 
-    // 添加部门状态检查的依赖注入点
-    private final Predicate<UUID> hasActiveDepartmentsChecker;
-
     // 领域事件列表
     private final List<DomainEvent> domainEvents = new ArrayList<>();
 
@@ -43,7 +39,6 @@ public class Company
         this.active = active;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
-        this.hasActiveDepartmentsChecker = null;
     }
 
     // 工厂方法创建公司实例
@@ -72,14 +67,15 @@ public class Company
         this.domainEvents.add(new CompanyInfoUpdatedEvent(this.id, this.name));
     }
 
-    public void updateName(String name, Predicate<String> isNameUnique)
+    // 修改 updateName 方法，使用 CompanyChecker 替代 Predicate
+    public void updateName(String name, CompanyChecker companyChecker)
     {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("公司名称不能为空");
         }
 
         // 检查名称唯一性
-        if (isNameUnique != null && !isNameUnique.test(name)) {
+        if (companyChecker != null && companyChecker.isNameUnique(name)) {
             throw new IllegalArgumentException("公司名称必须唯一");
         }
 
