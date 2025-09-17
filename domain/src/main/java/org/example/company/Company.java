@@ -1,8 +1,10 @@
-package org.example.account;
+package org.example.company;
 
 import lombok.Getter;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 import java.util.UUID;
 import java.util.function.Predicate;
@@ -30,6 +32,9 @@ public class Company
 
     // 添加部门状态检查的依赖注入点
     private final Predicate<UUID> hasActiveDepartmentsChecker;
+
+    // 领域事件列表
+    private final List<DomainEvent> domainEvents = new ArrayList<>();
 
     // 私有构造函数，仅供内部使用
     private Company(UUID id, String name, boolean active)
@@ -89,6 +94,8 @@ public class Company
         this.email = email;
         this.businessScope = businessScope;
         this.updatedAt = LocalDateTime.now();
+        // 添加领域事件
+        this.domainEvents.add(new CompanyInfoUpdatedEvent(this.id, this.name));
     }
 
     public void updateName(String name, Predicate<String> isNameUnique)
@@ -102,14 +109,19 @@ public class Company
             throw new IllegalArgumentException("公司名称必须唯一");
         }
 
+        String oldName = this.name;
         this.name = name;
         this.updatedAt = LocalDateTime.now();
+        // 添加领域事件
+        this.domainEvents.add(new CompanyNameUpdatedEvent(this.id, oldName, name));
     }
 
     public void activate()
     {
         this.active = true;
         this.updatedAt = LocalDateTime.now();
+        // 添加领域事件
+        this.domainEvents.add(new CompanyActivatedEvent(this.id, this.name));
     }
 
     // 修改 deactivate 方法以添加业务规则检查
@@ -122,6 +134,8 @@ public class Company
 
         this.active = false;
         this.updatedAt = LocalDateTime.now();
+        // 添加领域事件
+        this.domainEvents.add(new CompanyDeactivatedEvent(this.id, this.name));
     }
 
     // 重载 deactivate 方法，使用内部依赖
@@ -134,6 +148,16 @@ public class Company
 
         this.active = false;
         this.updatedAt = LocalDateTime.now();
+        // 添加领域事件
+        this.domainEvents.add(new CompanyDeactivatedEvent(this.id, this.name));
+    }
+
+    // 获取领域事件并清空
+    public List<DomainEvent> getDomainEvents()
+    {
+        List<DomainEvent> events = new ArrayList<>(this.domainEvents);
+        this.domainEvents.clear();
+        return events;
     }
 
     // 基于ID的相等性比较

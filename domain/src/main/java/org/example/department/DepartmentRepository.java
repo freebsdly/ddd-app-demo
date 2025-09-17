@@ -1,4 +1,4 @@
-package org.example.account;
+package org.example.department;
 
 import java.util.List;
 import java.util.Optional;

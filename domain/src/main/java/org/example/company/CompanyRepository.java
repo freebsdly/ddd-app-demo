@@ -1,4 +1,4 @@
-package org.example.account;
+package org.example.company;
 
 import java.util.Optional;
 
