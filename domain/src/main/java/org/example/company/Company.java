@@ -21,8 +21,7 @@ public class Company
 
     // 领域属性
     private String name;
-    private String registrationNumber;
-    private String address;
+    private Address address;
     private String contactPhone;
     private String email;
     private String businessScope;
@@ -47,17 +46,6 @@ public class Company
         this.hasActiveDepartmentsChecker = null;
     }
 
-    // 私有构造函数，支持依赖注入
-    private Company(UUID id, String name, boolean active, Predicate<UUID> hasActiveDepartmentsChecker)
-    {
-        this.id = id;
-        this.name = name;
-        this.active = active;
-        this.createdAt = LocalDateTime.now();
-        this.updatedAt = LocalDateTime.now();
-        this.hasActiveDepartmentsChecker = hasActiveDepartmentsChecker;
-    }
-
     // 工厂方法创建公司实例
     public static Company create(String name, boolean active)
     {
@@ -72,22 +60,8 @@ public class Company
         return new Company(id, name, active);
     }
 
-    // 工厂方法创建公司实例（带依赖注入）
-    public static Company create(String name, boolean active, Predicate<UUID> hasActiveDepartmentsChecker)
-    {
-        // 参数验证
-        if (name == null || name.trim().isEmpty()) {
-            throw new IllegalArgumentException("公司名称不能为空");
-        }
-
-        // 生成唯一ID
-        UUID id = UUID.randomUUID();
-
-        return new Company(id, name, active, hasActiveDepartmentsChecker);
-    }
-
     // 领域行为方法
-    public void updateInfo(String address, String contactPhone, String email, String businessScope)
+    public void updateInfo(Address address, String contactPhone, String email, String businessScope)
     {
         this.address = address;
         this.contactPhone = contactPhone;
@@ -125,24 +99,10 @@ public class Company
     }
 
     // 修改 deactivate 方法以添加业务规则检查
-    public void deactivate(Predicate<UUID> hasActiveDepartments)
+    public void deactivate(DepartmentChecker checker)
     {
         // 检查是否有活跃的部门
-        if (hasActiveDepartments.test(this.id)) {
-            throw new IllegalStateException("无法停用公司：存在活跃的部门，请先停用所有部门");
-        }
-
-        this.active = false;
-        this.updatedAt = LocalDateTime.now();
-        // 添加领域事件
-        this.domainEvents.add(new CompanyDeactivatedEvent(this.id, this.name));
-    }
-
-    // 重载 deactivate 方法，使用内部依赖
-    public void deactivate()
-    {
-        // 检查是否有活跃的部门
-        if (this.hasActiveDepartmentsChecker != null && this.hasActiveDepartmentsChecker.test(this.id)) {
+        if (checker.hasActiveDepartments(this.id)) {
             throw new IllegalStateException("无法停用公司：存在活跃的部门，请先停用所有部门");
         }
 
