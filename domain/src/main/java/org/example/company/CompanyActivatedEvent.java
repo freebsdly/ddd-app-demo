@@ -2,6 +2,7 @@ package org.example.company;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import org.example.DomainEvent;
 
 import java.util.UUID;
 

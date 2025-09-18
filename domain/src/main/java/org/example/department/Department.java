@@ -1,19 +1,18 @@
 package org.example.department;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
-import org.example.company.DomainEvent;
+import org.example.AggregateRoot;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
  * 部门实体，独立的聚合根
  */
 @Getter
-public class Department
+@EqualsAndHashCode(callSuper = false)
+public class Department extends AggregateRoot
 {
     // Getters
     private final UUID id;
@@ -24,9 +23,6 @@ public class Department
     private UUID parentId; // 添加父部门ID支持树形结构
     private final LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
-    // 领域事件列表
-    private final List<DomainEvent> domainEvents = new ArrayList<>();
 
     // 私有构造函数
     private Department(UUID id, String name, String code, UUID companyId, UUID parentId)
@@ -158,35 +154,5 @@ public class Department
         this.updatedAt = LocalDateTime.now();
         // 添加领域事件
         this.addDomainEvent(new DepartmentParentUpdatedEvent(this.id, oldParentId, parentId));
-    }
-
-    // 获取领域事件并清空
-    public List<DomainEvent> getDomainEvents()
-    {
-        List<DomainEvent> events = new ArrayList<>(this.domainEvents);
-        this.domainEvents.clear();
-        return events;
-    }
-
-    // 基于ID的相等性比较
-    @Override
-    public boolean equals(Object o)
-    {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Department that = (Department) o;
-        return Objects.equals(id, that.id);
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return Objects.hash(id);
-    }
-
-    // 添加领域事件的辅助方法
-    private void addDomainEvent(DomainEvent event)
-    {
-        this.domainEvents.add(event);
     }
 }

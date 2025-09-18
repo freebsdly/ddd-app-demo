@@ -1,5 +1,7 @@
 package org.example.company;
 
+import org.example.DomainEvent;
+
 /**
  * 领域事件发布器接口
  */

@@ -1,11 +1,10 @@
 package org.example.company;
 
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import org.example.AggregateRoot;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -13,23 +12,19 @@ import java.util.UUID;
  * 负责管理公司信息
  */
 @Getter
-public class Company
+@EqualsAndHashCode(callSuper = false)
+public class Company extends AggregateRoot
 {
     // 唯一标识符
     private final UUID id;
 
     // 领域属性
     private String name;
-    private Address address;
-    private String contactPhone;
-    private String email;
-    private String businessScope;
+    // 使用组合方式管理公司信息
+    private CompanyInfo companyInfo;
     private boolean active;
     private final LocalDateTime createdAt;
     private LocalDateTime updatedAt;
-
-    // 领域事件列表
-    private final List<DomainEvent> domainEvents = new ArrayList<>();
 
     // 私有构造函数，仅供内部使用
     private Company(UUID id, String name, boolean active)
@@ -39,19 +34,17 @@ public class Company
         this.active = active;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
+        // 初始化公司信息
+        this.companyInfo = new CompanyInfo();
     }
 
     // 用于仓储加载的私有构造函数，不触发事件
-    private Company(UUID id, String name, Address address, String contactPhone,
-            String email, String businessScope, boolean active,
+    private Company(UUID id, String name, CompanyInfo companyInfo, boolean active,
             LocalDateTime createdAt, LocalDateTime updatedAt)
     {
         this.id = id;
         this.name = name;
-        this.address = address;
-        this.contactPhone = contactPhone;
-        this.email = email;
-        this.businessScope = businessScope;
+        this.companyInfo = companyInfo;
         this.active = active;
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
@@ -75,28 +68,22 @@ public class Company
     }
 
     // 仓储加载时使用的工厂方法
-    public static Company create(UUID id, String name, Address address,
-            String contactPhone, String email,
-            String businessScope, boolean active,
-            LocalDateTime createdAt, LocalDateTime updatedAt)
+    public static Company create(UUID id, String name, CompanyInfo companyInfo,
+            boolean active, LocalDateTime createdAt, LocalDateTime updatedAt)
     {
-        return new Company(id, name, address, contactPhone, email, businessScope,
-                active, createdAt, updatedAt);
+        return new Company(id, name, companyInfo, active, createdAt, updatedAt);
     }
 
     // 领域行为方法
     public void updateInfo(Address address, String contactPhone, String email, String businessScope)
     {
-        this.address = address;
-        this.contactPhone = contactPhone;
-        this.email = email;
-        this.businessScope = businessScope;
+        // 创建新的公司信息对象
+        this.companyInfo = new CompanyInfo(address, contactPhone, email, businessScope);
         this.updatedAt = LocalDateTime.now();
         // 添加领域事件
         this.addDomainEvent(new CompanyInfoUpdatedEvent(this.id, this.name));
     }
 
-    // 修改 updateName 方法，使用 CompanyChecker 替代 Predicate
     public void updateName(String name, CompanyChecker companyChecker)
     {
         if (name == null || name.trim().isEmpty()) {
@@ -137,33 +124,4 @@ public class Company
         this.addDomainEvent(new CompanyDeactivatedEvent(this.id, this.name));
     }
 
-    // 获取领域事件并清空
-    public List<DomainEvent> getDomainEvents()
-    {
-        List<DomainEvent> events = new ArrayList<>(this.domainEvents);
-        this.domainEvents.clear();
-        return events;
-    }
-
-    // 基于ID的相等性比较
-    @Override
-    public boolean equals(Object o)
-    {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Company company = (Company) o;
-        return Objects.equals(id, company.id);
-    }
-
-    @Override
-    public int hashCode()
-    {
-        return Objects.hash(id);
-    }
-
-    // 添加领域事件的辅助方法
-    private void addDomainEvent(DomainEvent event)
-    {
-        this.domainEvents.add(event);
-    }
 }

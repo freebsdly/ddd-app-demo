@@ -6,11 +6,11 @@ import lombok.Value;
 @Value
 public class Address
 {
-    private final String street;
-    private final String city;
-    private final String state;
-    private final String zipCode;
-    private final String country;
+    String street;
+    String city;
+    String state;
+    String zipCode;
+    String country;
 
     // 构造函数验证
     public Address(String street, String city, String state, String zipCode, String country)
