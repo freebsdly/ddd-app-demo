@@ -1,5 +1,8 @@
 package org.example;
 
+import lombok.Getter;
+
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +12,16 @@ import java.util.List;
 public abstract class AggregateRoot
 {
     private final List<DomainEvent> domainEvents = new ArrayList<>();
+    @Getter
+    protected final LocalDateTime createdAt;
+    @Getter
+    protected LocalDateTime updatedAt;
+
+    protected AggregateRoot(LocalDateTime createdAt, LocalDateTime updatedAt)
+    {
+        this.createdAt = createdAt;
+        this.updatedAt = updatedAt;
+    }
 
     /**
      * 获取并清空领域事件列表
@@ -30,5 +43,6 @@ public abstract class AggregateRoot
     protected void addDomainEvent(DomainEvent event)
     {
         this.domainEvents.add(event);
+        this.updatedAt = LocalDateTime.now();
     }
 }

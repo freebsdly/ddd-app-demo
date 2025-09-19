@@ -10,7 +10,7 @@
     </parent>
 
     <artifactId>domain</artifactId>
-    <name>Domain Module</name>
+    <name>domain-module</name>
 
     <dependencies>
         <dependency>
