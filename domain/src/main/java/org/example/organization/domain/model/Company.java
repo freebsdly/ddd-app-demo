@@ -6,6 +6,7 @@ import org.example.AggregateRoot;
 import org.example.organization.domain.event.*;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 import java.util.UUID;
 
 /**
@@ -43,8 +44,7 @@ public class Company extends AggregateRoot
         super(createdAt, updatedAt);
         this.id = id;
         this.name = name;
-        // 修复：确保companyInfo不为null
-        this.companyInfo = companyInfo != null ? companyInfo : new CompanyInfo();
+        this.companyInfo = Objects.requireNonNullElseGet(companyInfo, CompanyInfo::new);
         this.active = active;
     }
 
