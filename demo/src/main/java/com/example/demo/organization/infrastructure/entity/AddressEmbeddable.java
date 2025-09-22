@@ -1,4 +1,4 @@
-package com.example.demo.organization.infrastructure;
+package com.example.demo.organization.infrastructure.entity;
 
 import jakarta.persistence.Embeddable;
 import lombok.Getter;

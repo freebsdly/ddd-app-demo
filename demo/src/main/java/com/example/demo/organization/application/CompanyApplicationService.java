@@ -1,7 +1,9 @@
-package org.example.organization.domain.service;
+package com.example.demo.organization.application;
 
 import org.example.organization.domain.model.Company;
 import org.example.organization.domain.model.CompanyInfo;
+import org.example.organization.domain.service.CompanyDomainService;
+import org.example.organization.domain.service.DomainEventPublisher;
 
 import java.util.UUID;
 

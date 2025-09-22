@@ -1,5 +1,6 @@
 package com.example.demo.organization.infrastructure;
 
+import com.example.demo.organization.infrastructure.entity.CompanyEntity;
 import org.example.organization.domain.model.Company;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
@@ -9,8 +10,8 @@ import java.util.Optional;
 import java.util.UUID;
 
 @Repository
-public interface CompanyJpaRepository extends JpaRepository<Company, UUID>, QuerydslPredicateExecutor<Company>
+public interface CompanyJpaRepository extends JpaRepository<CompanyEntity, UUID>, QuerydslPredicateExecutor<Company>
 {
 
-    Optional<Company> findByName(String name);
+    Optional<CompanyEntity> findByName(String name);
 }
