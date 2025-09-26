@@ -10,6 +10,8 @@ import org.mapstruct.*;
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
 public interface EntityMapper
 {
+    CompanyEntityDto toDto(Company company);
+
     Company toDomainEntity(CompanyEntity companyEntity);
 
     CompanyEntity toJpaEntity(Company company);
@@ -34,9 +36,29 @@ public interface EntityMapper
 
     DepartmentEntityDto toDto(DepartmentEntity departmentEntity);
 
+
     DepartmentEntity toJpaEntity(Department department);
 
     Department toDomainEntity(DepartmentEntity departmentEntity);
+
+    @ObjectFactory
+    default Department createDepartment(DepartmentEntity departmentEntity)
+    {
+        return Department.create(departmentEntity.getName(), departmentEntity.getCode(),
+                departmentEntity.getCompanyId());
+    }
+
+    @AfterMapping
+    default void mapDepartmentFields(@MappingTarget DepartmentEntity departmentEntity, Department department)
+    {
+        departmentEntity.setId(department.getId());
+        departmentEntity.setName(department.getName());
+        departmentEntity.setCode(department.getCode());
+        departmentEntity.setCompanyId(department.getCompanyId());
+        departmentEntity.setCreatedAt(department.getCreatedAt());
+        departmentEntity.setUpdatedAt(department.getUpdatedAt());
+    }
+
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     DepartmentEntity partialUpdate(

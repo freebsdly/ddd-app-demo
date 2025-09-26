@@ -6,17 +6,18 @@ import com.example.demo.organization.application.EmployeeEntityDto;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 
+import java.util.List;
 import java.util.UUID;
 
 public interface OrganizationApiDoc
 {
     @Tag(name = "Company API")
     @Operation(summary = "Create a company")
-    public CompanyEntityDto createCompany(CompanyEntityDto companyDto);
+    public ApiBody<CompanyEntityDto> createCompany(CompanyEntityDto companyDto);
 
     @Tag(name = "Company API")
     @Operation(summary = "Update a company")
-    public CompanyEntityDto updateCompany(UUID companyId, CompanyEntityDto companyDto);
+    public ApiBody<CompanyEntityDto> updateCompany(UUID companyId, CompanyEntityDto companyDto);
 
     @Tag(name = "Company API")
     @Operation(summary = "Delete a company")
@@ -24,19 +25,19 @@ public interface OrganizationApiDoc
 
     @Tag(name = "Company API")
     @Operation(summary = "Get a company")
-    public CompanyEntityDto getCompany(UUID companyId);
+    public ApiBody<CompanyEntityDto> getCompany(UUID companyId);
 
     @Tag(name = "Company API")
     @Operation(summary = "Get all companies")
-    public Iterable<CompanyEntityDto> getAllCompanies();
+    public ApiBody<List<CompanyEntityDto>> getAllCompanies();
 
     @Tag(name = "Department API")
     @Operation(summary = "Create a department")
-    public DepartmentEntityDto createDepartment(DepartmentEntityDto departmentDto);
+    public ApiBody<DepartmentEntityDto> createDepartment(DepartmentEntityDto departmentDto);
 
     @Tag(name = "Department API")
     @Operation(summary = "Update a department")
-    public DepartmentEntityDto updateDepartment(UUID departmentId, DepartmentEntityDto departmentDto);
+    public ApiBody<DepartmentEntityDto> updateDepartment(UUID departmentId, DepartmentEntityDto departmentDto);
 
     @Tag(name = "Department API")
     @Operation(summary = "Delete a department")
@@ -44,19 +45,19 @@ public interface OrganizationApiDoc
 
     @Tag(name = "Department API")
     @Operation(summary = "Get a department")
-    public DepartmentEntityDto getDepartment(UUID departmentId);
+    public ApiBody<DepartmentEntityDto> getDepartment(UUID departmentId);
 
     @Tag(name = "Department API")
     @Operation(summary = "Get all departments")
-    public Iterable<DepartmentEntityDto> getAllDepartments();
+    public ApiBody<List<DepartmentEntityDto>> getAllDepartments();
 
     @Tag(name = "Employee API")
     @Operation(summary = "Create an employee")
-    public EmployeeEntityDto createEmployee(EmployeeEntityDto employeeDto);
+    public ApiBody<EmployeeEntityDto> createEmployee(EmployeeEntityDto employeeDto);
 
     @Tag(name = "Employee API")
     @Operation(summary = "Update an employee")
-    public EmployeeEntityDto updateEmployee(UUID employeeId, EmployeeEntityDto employeeDto);
+    public ApiBody<EmployeeEntityDto> updateEmployee(UUID employeeId, EmployeeEntityDto employeeDto);
 
     @Tag(name = "Employee API")
     @Operation(summary = "Delete an employee")
@@ -64,10 +65,10 @@ public interface OrganizationApiDoc
 
     @Tag(name = "Employee API")
     @Operation(summary = "Get an employee")
-    public EmployeeEntityDto getEmployee(UUID employeeId);
+    public ApiBody<EmployeeEntityDto> getEmployee(UUID employeeId);
 
     @Tag(name = "Employee API")
     @Operation(summary = "Get all employees")
-    public Iterable<EmployeeEntityDto> getAllEmployees();
+    public ApiBody<List<EmployeeEntityDto>> getAllEmployees();
 
 }

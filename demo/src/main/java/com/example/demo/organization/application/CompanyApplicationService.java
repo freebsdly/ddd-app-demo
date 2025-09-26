@@ -21,6 +21,7 @@ public class CompanyApplicationService
     private final CompanyDomainService companyDomainService;
     // 添加事件发布器
     private final DomainEventPublisher domainEventPublisher;
+    private final EntityMapper entityMapper;
 
     /**
      * 创建公司
@@ -29,12 +30,12 @@ public class CompanyApplicationService
      * @param active 是否激活
      * @return 创建的公司实体
      */
-    public Company createCompany(String name, boolean active)
+    public CompanyEntityDto createCompany(String name, boolean active)
     {
         Company company = companyDomainService.createCompany(name, active);
         // 发布领域事件
         company.getDomainEvents().forEach(domainEventPublisher::publish);
-        return company;
+        return entityMapper.toDto(company);
     }
 
     /**

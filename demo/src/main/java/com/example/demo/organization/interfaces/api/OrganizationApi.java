@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -18,14 +19,16 @@ public class OrganizationApi implements OrganizationApiDoc
 
     @PostMapping("/companies")
     @Override
-    public CompanyEntityDto createCompany(CompanyEntityDto companyDto)
+    public ApiBody<CompanyEntityDto> createCompany(@RequestBody CompanyEntityDto companyDto)
     {
-        return null;
+        CompanyEntityDto company = companyApplicationService.createCompany(companyDto.getName(), companyDto.isActive());
+        return ApiBody.success(company);
     }
 
     @PostMapping("/companies/{companyId}")
     @Override
-    public CompanyEntityDto updateCompany(@PathVariable UUID companyId, CompanyEntityDto companyDto)
+    public ApiBody<CompanyEntityDto> updateCompany(@PathVariable UUID companyId,
+            @RequestBody CompanyEntityDto companyDto)
     {
         return null;
     }
@@ -39,28 +42,29 @@ public class OrganizationApi implements OrganizationApiDoc
 
     @GetMapping("/companies/{companyId}")
     @Override
-    public CompanyEntityDto getCompany(@PathVariable UUID companyId)
+    public ApiBody<CompanyEntityDto> getCompany(@PathVariable UUID companyId)
     {
         return null;
     }
 
     @GetMapping("/companies")
     @Override
-    public Iterable<CompanyEntityDto> getAllCompanies()
+    public ApiBody<List<CompanyEntityDto>> getAllCompanies()
     {
         return null;
     }
 
     @PostMapping("/departments")
     @Override
-    public DepartmentEntityDto createDepartment(DepartmentEntityDto departmentDto)
+    public ApiBody<DepartmentEntityDto> createDepartment(@RequestBody DepartmentEntityDto departmentDto)
     {
         return null;
     }
 
     @PostMapping("/departments/{departmentId}")
     @Override
-    public DepartmentEntityDto updateDepartment(@PathVariable UUID departmentId, DepartmentEntityDto departmentDto)
+    public ApiBody<DepartmentEntityDto> updateDepartment(@PathVariable UUID departmentId,
+            @RequestBody DepartmentEntityDto departmentDto)
     {
         return null;
     }
@@ -74,28 +78,29 @@ public class OrganizationApi implements OrganizationApiDoc
 
     @GetMapping("/departments/{departmentId}")
     @Override
-    public DepartmentEntityDto getDepartment(@PathVariable UUID departmentId)
+    public ApiBody<DepartmentEntityDto> getDepartment(@PathVariable UUID departmentId)
     {
         return null;
     }
 
     @GetMapping("/departments")
     @Override
-    public Iterable<DepartmentEntityDto> getAllDepartments()
+    public ApiBody<List<DepartmentEntityDto>> getAllDepartments()
     {
         return null;
     }
 
     @PostMapping("/employees")
     @Override
-    public EmployeeEntityDto createEmployee(EmployeeEntityDto employeeDto)
+    public ApiBody<EmployeeEntityDto> createEmployee(@RequestBody EmployeeEntityDto employeeDto)
     {
         return null;
     }
 
     @PostMapping("/employees/{employeeId}")
     @Override
-    public EmployeeEntityDto updateEmployee(@PathVariable UUID employeeId, EmployeeEntityDto employeeDto)
+    public ApiBody<EmployeeEntityDto> updateEmployee(@PathVariable UUID employeeId,
+            @RequestBody EmployeeEntityDto employeeDto)
     {
         return null;
     }
@@ -109,14 +114,14 @@ public class OrganizationApi implements OrganizationApiDoc
 
     @GetMapping("/employees/{employeeId}")
     @Override
-    public EmployeeEntityDto getEmployee(@PathVariable UUID employeeId)
+    public ApiBody<EmployeeEntityDto> getEmployee(@PathVariable UUID employeeId)
     {
         return null;
     }
 
     @GetMapping("/employees")
     @Override
-    public Iterable<EmployeeEntityDto> getAllEmployees()
+    public ApiBody<List<EmployeeEntityDto>> getAllEmployees()
     {
         return null;
     }
