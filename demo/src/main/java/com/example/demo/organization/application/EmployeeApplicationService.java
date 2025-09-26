@@ -1,8 +1,11 @@
 package com.example.demo.organization.application;
 
+import lombok.AllArgsConstructor;
 import org.example.organization.domain.model.Employee;
 import org.example.organization.domain.service.DomainEventPublisher;
 import org.example.organization.domain.service.EmployeeDomainService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import java.util.UUID;
 
@@ -10,17 +13,12 @@ import java.util.UUID;
  * 员工应用服务
  * 协调领域服务和仓储来处理员工相关的业务操作
  */
+@Service
+@AllArgsConstructor(onConstructor_ = {@Autowired})
 public class EmployeeApplicationService
 {
     private final EmployeeDomainService employeeDomainService;
     private final DomainEventPublisher domainEventPublisher;
-
-    public EmployeeApplicationService(EmployeeDomainService employeeDomainService,
-            DomainEventPublisher domainEventPublisher)
-    {
-        this.employeeDomainService = employeeDomainService;
-        this.domainEventPublisher = domainEventPublisher;
-    }
 
     /**
      * 创建员工

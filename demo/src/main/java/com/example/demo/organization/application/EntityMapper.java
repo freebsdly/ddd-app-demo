@@ -4,6 +4,7 @@ import com.example.demo.organization.infrastructure.entity.CompanyEntity;
 import com.example.demo.organization.infrastructure.entity.DepartmentEntity;
 import com.example.demo.organization.infrastructure.entity.EmployeeEntity;
 import org.example.organization.domain.model.Company;
+import org.example.organization.domain.model.Department;
 import org.mapstruct.*;
 
 @Mapper(unmappedTargetPolicy = ReportingPolicy.IGNORE, componentModel = MappingConstants.ComponentModel.SPRING)
@@ -20,7 +21,8 @@ public interface EntityMapper
     }
 
     @AfterMapping
-    default void mapCompanyFields(@MappingTarget CompanyEntity companyEntity, Company company) {
+    default void mapCompanyFields(@MappingTarget CompanyEntity companyEntity, Company company)
+    {
         companyEntity.setId(company.getId());
         companyEntity.setName(company.getName());
         companyEntity.setActive(company.isActive());
@@ -31,6 +33,10 @@ public interface EntityMapper
     DepartmentEntity toEntity(DepartmentEntityDto departmentEntityDto);
 
     DepartmentEntityDto toDto(DepartmentEntity departmentEntity);
+
+    DepartmentEntity toJpaEntity(Department department);
+
+    Department toDomainEntity(DepartmentEntity departmentEntity);
 
     @BeanMapping(nullValuePropertyMappingStrategy = NullValuePropertyMappingStrategy.IGNORE)
     DepartmentEntity partialUpdate(

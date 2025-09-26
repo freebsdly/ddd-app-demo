@@ -1,16 +1,21 @@
 package com.example.demo.organization.interfaces.api;
 
-import com.example.demo.organization.application.CompanyEntityDto;
-import com.example.demo.organization.application.DepartmentEntityDto;
-import com.example.demo.organization.application.EmployeeEntityDto;
+import com.example.demo.organization.application.*;
+import lombok.AllArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/organization")
+@AllArgsConstructor(onConstructor_ = {@Autowired})
 public class OrganizationApi implements OrganizationApiDoc
 {
+    private final CompanyApplicationService companyApplicationService;
+    private final DepartmentApplicationService departmentApplicationService;
+    private final EmployeeApplicationService employeeApplicationService;
+
     @PostMapping("/companies")
     @Override
     public CompanyEntityDto createCompany(CompanyEntityDto companyDto)
